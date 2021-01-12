@@ -27,15 +27,20 @@ begin
 	preset = 0;
 
 end
-initial
+always
 begin
-	#5 clk = ~clk;
+	#5  clk = ~clk;
 end
 initial
 begin
-	#10 up_down = 1; en = 1;
-	#50 up_down = 0; en = 1;
-	#100 $finish;
+	#15 reset = 0;
+        #35 preset = 1;
+        #20 reset = 1;
+        #20 reset = 0;	
+	#20 up_down =1;
+        #30  en = 1;
+	#450 up_down = 0; en = 1;
+	#750 $finish;
 end
 
 initial

@@ -9,7 +9,7 @@ module address_generator
 	input en,
 	input up_down);
 reg addr;
-assign carry =  (address=={a_width{1'b1}})?1:0;
+assign carry = address;
 always@(posedge clk)
 begin
 if(reset)begin

@@ -35,12 +35,12 @@ initial
 begin
 	#15 reset = 0;
         #35 preset = 1;
-        #20 reset = 1;
-        #20 reset = 0;	
-	#20 up_down =1;
-        #30  en = 1;
-	#450 up_down = 0; en = 1;
-	#750 $finish;
+        #50 reset = 1;
+        #11 reset = 0;	preset = 0;
+	#12 up_down =1;
+        #12  en = 1;
+	#1050 up_down = 0; en = 1;
+	#3050 $finish;
 end
 
 initial

@@ -14,13 +14,13 @@ reg [width-1:0] data_out_r;
 always@(posedge clk or posedge rst)
 begin
 	if(rst)
-		data_out_r = 0;
+		data_out_r <= 0;
 	else if(write && !read)
-		memory[a_width] <= data_in;
+		memory[address] <= data_in;
        else if (read && !write)
-               data_out <= memory[address];
+               data_out_r <= memory[address];
 end
 
 assign data_out = data_out_r;
 
-
+endmodule

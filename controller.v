@@ -141,7 +141,7 @@ begin
 end
 
 
-assign fail = is_equal?f_out:0;
+
 
 
 endmodule

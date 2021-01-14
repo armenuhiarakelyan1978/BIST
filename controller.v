@@ -1,4 +1,3 @@
-`include "address_generator.v"
 module controller(output reg out,
 output reg reset,
 output reg preset,
@@ -10,7 +9,9 @@ output reg write,
 output reg done,
 input clk,
 input rst,
-input start
+input start,
+input carry,
+input is_equal
 );
 
 parameter a_width = 4;
@@ -25,14 +26,6 @@ localparam R0 = 3'b010;
 localparam W1 = 3'b011;
 localparam R1 = 3'b100;
 
-address_generator #(.a_width(a_width)) add_gen(
-.clk(clk),
-.reset(reset),
-.preset(preset),
-.en(en),
-.up_down(up_down),
-.address(address),
-.carry(carry));
 
 
 always@(posedge clk or posedge rst)
@@ -87,7 +80,7 @@ begin
 		W1:begin 
 
 			out     = 1;
-			reset   = 1;
+			reset   = 0;
 			preset  = 0;
                         en      = 1;
 			up_down = 1; 
@@ -155,15 +148,21 @@ begin
 	endcase
 end
 
-/*always@(*)
+always@(*)
 begin
-if(state == R0 || state == R1 || state == W0 || state == W1)
+if(state == R0 || state == R1 )
 begin
-	if(re)
+	if(is_equal)
+	begin
+		fail = 0;
+	end
+	else begin
+		fail = 1;
+	end
 
 end	
 
-end*/
+end
 
 
 

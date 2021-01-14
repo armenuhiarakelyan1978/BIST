@@ -8,32 +8,47 @@ module address_generator
 	input preset,
 	input en,
 	input up_down);
-assign carry = ((en && up_down && address=={a_width{1'b1}} && (preset == 1 || reset == 1))  || (en && ~up_down && address == 0 && (reset ==1 || preset ==1)))?1:0;
+
+reg carry_r, carry_r_i;
+assign carry = carry_r && ~carry_r_i;
 
 always@(posedge clk)
 begin
 if(reset)begin
 		address <=0;
+		carry_r <=0;
 end else 
      if (preset)begin
-		address <= {a_width{1'b1}};        
+		address <= { a_width{1'b1}};
+	        carry_r <= 0;	
 	end else    
-         if(en && up_down)
-
-			if (address == {a_width{1'b1}})
-			begin
-				address <= 0;
+	if(en && up_down)begin
+                                address <= address + 1;    
+				if(address == {a_width{1'b1}}-1)
+				begin
+					carry_r <= 1;
+				end
+				else begin
+					carry_r <= 0;
+				end
 			end
-			else begin
-				address <= address + 1;
-			end
-	else if (en && ~up_down)
-		if(address == 0)begin
-			address <= {a_width{1'b1}};
-		end
-		else begin
+	else if (en && ~up_down)begin
 			address <= address - 1;
+			if(address == 1)begin
+				carry_r <= 1;
+			end
+			else carry_r <= 0;
 		end
 
 end
+always@(posedge clk)
+begin
+	if(reset)begin
+		carry_r_i <= 0;
+	end
+	else begin
+		carry_r_i <= carry_r;
+	end
+end
+
 endmodule

@@ -8,9 +8,8 @@ module address_generator
 	input preset,
 	input en,
 	input up_down);
-reg addr;
-assign carry = (en && up_down && address=={a_width{1'b1}})?1:
-	(en && ~up_down && address == 0)?0:1'bz;
+assign carry = ((en && up_down && address=={a_width{1'b1}} && (preset == 1 || reset == 1))  || (en && ~up_down && address == 0 && (reset ==1 || preset ==1)))?1:0;
+
 always@(posedge clk)
 begin
 if(reset)begin

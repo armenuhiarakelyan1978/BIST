@@ -1,5 +1,6 @@
 `timescale 1ns/1ns
-module controller_tb.v;
+//`include "controller.v"
+module controller_tb;
 reg clk;
 reg rst;
 reg start;
@@ -16,8 +17,6 @@ wire done;
 controller cont(.clk(clk),
 .rst(rst),
 .start(start),
-.is_equal(is_equal),
-.carry(carry),
 .out(out),
 .reset(reset),
 .preset(preset),
@@ -29,13 +28,9 @@ controller cont(.clk(clk),
 
 initial
 begin
-	reset = 1;
-	preset = 0;
-	up_down = 0;
-	en = 0;
-	fail = 0;
-	done = 0;
-	clk = 0
+rst = 1;
+clk = 0;
+start = 0;
 end
 initial
 begin
@@ -51,9 +46,11 @@ end
 
 initial
 begin
-	#3; rst = 0;
-	#4; start = 0;
-	carry = 0;
+	#15; rst = 0;
+	#4; start = 1;
+	#500 $finish;
+
+
 
 end
 

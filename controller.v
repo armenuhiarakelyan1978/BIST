@@ -1,26 +1,39 @@
-module controller(output out,
-output reset,
-output preset,
-output en,
-output up_down,
-output fail,
-output read,
-output write,
-output done,
+`include "address_generator.v"
+module controller(output reg out,
+output reg reset,
+output reg preset,
+output reg en,
+output reg up_down,
+output reg fail,
+output reg read,
+output reg write,
+output reg done,
 input clk,
 input rst,
-input start,
-input is_equal,
-input carry
+input start
 );
 
+parameter a_width = 4;
+
 reg [2:0] state, next_state;
+wire [a_width-1:0] address;
+
 
 localparam RST = 3'b000;
 localparam W0 = 3'b001;
 localparam R0 = 3'b010;
 localparam W1 = 3'b011;
 localparam R1 = 3'b100;
+
+address_generator #(.a_width(a_width)) add_gen(
+.clk(clk),
+.reset(reset),
+.preset(preset),
+.en(en),
+.up_down(up_down),
+.address(address),
+.carry(carry));
+
 
 always@(posedge clk or posedge rst)
 begin
@@ -29,10 +42,12 @@ begin
 	end
 	else begin
 	        state <= next_state;
+	
 	end
 end
 always@(state)
 begin
+
 	case(state)
 		RST:begin
 			out     = 0;
@@ -46,7 +61,7 @@ begin
                         done    = 0;
 
 		end
-		WO:begin
+		W0:begin
 
 			out     = 0;
 			reset   = 0;
@@ -62,10 +77,9 @@ begin
 			
 			out     = 0;
 			reset   = 0;
-			preset  = 1;
+			preset  = 0;
                         en      = 1;
 			up_down = 0; 
-                        fail    = 0;
 			read    = 1;
 			write   = 0;
                         done    = 0;
@@ -73,7 +87,7 @@ begin
 		W1:begin 
 
 			out     = 1;
-			reset   = 0;
+			reset   = 1;
 			preset  = 0;
                         en      = 1;
 			up_down = 1; 
@@ -89,11 +103,11 @@ begin
 			preset  = 0;
                         en      = 1;
 			up_down = 1; 
-                        fail    = 1;
 			read    = 1;
 			write   = 0;
                         done    = 1;
 		end
+	endcase
 end
 always@(*)
 begin
@@ -107,7 +121,7 @@ begin
 			end
 		end
 		W0:begin
-			if(carry = 1)begin
+			if(carry == 1)begin
 				next_state = R0;
 			end
 			else begin
@@ -115,7 +129,7 @@ begin
 			end
 		end
 		R0:begin
-			if(carry = 0)begin
+			if(carry == 1)begin
 				next_state = W1;
 			end
 			else begin
@@ -123,7 +137,7 @@ begin
 			end
 		end
 		W1:begin
-			if(carry = 1)begin
+			if(carry == 1)begin
 				next_state = R1;
 			end
 			else begin
@@ -131,15 +145,25 @@ begin
 			end
 		end
 		R1:begin
-			if(carry = 1)begin
+			if(carry == 1)begin
 				next_state = RST;
 			end
 			else begin
 				next_state = R1;
 			end
 		end
+	endcase
 end
 
+/*always@(*)
+begin
+if(state == R0 || state == R1 || state == W0 || state == W1)
+begin
+	if(re)
+
+end	
+
+end*/
 
 
 

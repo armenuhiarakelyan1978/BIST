@@ -1,3 +1,4 @@
+`timescale 1ns/1ns
 module controller(output reg out,
 output reg reset,
 output reg preset,
@@ -14,21 +15,17 @@ input carry,
 input is_equal
 );
 
-parameter a_width = 4;
 
 reg [2:0] state, next_state;
-wire [a_width-1:0] address;
 
 
-localparam RST = 3'b000;
-localparam W0 = 3'b001;
-localparam R0 = 3'b010;
-localparam W1 = 3'b011;
-localparam R1 = 3'b100;
+parameter [2:0] RST = 3'b000,
+                 W0 = 3'b001,
+                 R0 = 3'b010,
+                 W1 = 3'b011,
+                 R1 = 3'b100;
 
-
-
-always@(posedge clk or posedge rst)
+always@( posedge clk or posedge rst)
 begin
 	if(rst)begin
 		state <= RST;
@@ -40,7 +37,7 @@ begin
 end
 always@(state)
 begin
-
+#1;
 	case(state)
 		RST:begin
 			out     = 0;
@@ -161,10 +158,6 @@ begin
 	end
 
 end	
-
 end
-
-
-
 
 endmodule

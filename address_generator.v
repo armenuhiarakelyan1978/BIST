@@ -10,17 +10,16 @@ module address_generator
 	input up_down);
 
 reg carry_r, carry_r_i;
-assign carry = carry_r && ~carry_r_i;
+assign carry = carry_r;
 
 always@(posedge clk)
 begin
+	carry_r <= 0;
 if(reset)begin
 		address <=0;
-		carry_r <=0;
-end else 
+end else
      if (preset)begin
 		address <= { a_width{1'b1}};
-	        carry_r <= 0;	
 	end else    
 	if(en && up_down)begin
                                 address <= address + 1;    
@@ -28,16 +27,12 @@ end else
 				begin
 					carry_r <= 1;
 				end
-				else begin
-					carry_r <= 0;
-				end
 			end
 	else if (en && ~up_down)begin
 			address <= address - 1;
 			if(address == 1)begin
 				carry_r <= 1;
 			end
-			else carry_r <= 0;
 		end
 
 end

@@ -1,3 +1,11 @@
+`include "comparator.v"
+`include "controller.v"
+`include "memory.v"
+`include "address_generator.v"
+`include "data_generator.v"
+
+
+
 module top(output fail,
 output done,
 input clk,
@@ -19,6 +27,7 @@ wire [width-1:0] data_out;
 wire [width-1:0] data_in;
 wire is_equal;
 wire in;
+wire [width-1:0] data_comp;
 
 
 address_generator #(.a_width(a_width)) add_gen(
@@ -46,8 +55,7 @@ controller cont(.clk(clk),
 .is_equal(is_equal));
 
 memory #(.a_width(a_width), .width(width)) mem(
-.data_out(data_out),
-.data_in(data_in),
+.data_out_in(data_out),
 .read(read),
 .write(write),
 .address(address),
@@ -55,11 +63,11 @@ memory #(.a_width(a_width), .width(width)) mem(
 );
 
 comparator comp(.data_in1(data_in),
-.data_in2(data_out),
+.data_in2(data_comp),
 .is_equal(is_equal));
 
 data_generator #(.width(width)) data_gen(.data_in(out),
-.data_out(data_in));
+.data_out(data_in), .data_comp(data_comp));
 
 
 endmodule

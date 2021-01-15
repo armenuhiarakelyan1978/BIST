@@ -36,7 +36,7 @@ begin
 	#15; rst = 0;
 	#4; start = 1;
 	#15; start = 0;
-	#1500 $finish;
+	#4500 $finish;
 
 
 

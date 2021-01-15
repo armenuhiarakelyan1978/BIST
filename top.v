@@ -62,12 +62,13 @@ memory #(.a_width(a_width), .width(width)) mem(
 .clk(clk)
 );
 
-comparator comp(.data_in1(data_in),
-.data_in2(data_comp),
+comparator comp(.data_in1(data_comp),
+.read(read),
+.data_in2(data_out),
 .is_equal(is_equal));
 
 data_generator #(.width(width)) data_gen(.data_in(out),
-.data_out(data_in), .data_comp(data_comp));
+.data_out(data_out),.write(write), .data_comp(data_comp));
 
 
 endmodule

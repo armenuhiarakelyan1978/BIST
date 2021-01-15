@@ -37,7 +37,7 @@ begin
 end
 always@(state)
 begin
-#1;
+
 	case(state)
 		RST:begin
 			out     = 0;

@@ -63,7 +63,6 @@ memory #(.a_width(a_width), .width(width)) mem(
 );
 
 comparator comp(.data_in1(data_comp),
-.read(read),
 .data_in2(data_out),
 .is_equal(is_equal));
 
